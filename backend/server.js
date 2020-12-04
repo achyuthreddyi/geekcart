@@ -1,8 +1,13 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
+const { connectDB } = require('./config/connectDB')
+
+connectDB()
 
 app.get('/', (req, res) => {
   res.send('hi')
 })
 
-app.listen(5000, console.log('app working on port 5000'))
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => console.log(`app working on port ${PORT}`))
