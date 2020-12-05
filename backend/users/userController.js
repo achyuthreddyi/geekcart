@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator')
 const { generateToken } = require('../config/generateToken')
 const User = require('./userModel')
 
@@ -44,6 +45,13 @@ const getUser = async user => {
 
 exports.signUp = async (req, res) => {
   const result = await registerUser(req.body)
+
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      error: errors.array()[0].msg
+    })
+  }
 
   if (!result.error) {
     res.status(201).json(result)
