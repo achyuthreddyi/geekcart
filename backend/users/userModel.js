@@ -46,12 +46,12 @@ const userSchema = new mongoose.Schema(
 userSchema
   .virtual('password')
   .set(function (password) {
-    this.password = password
+    this._password = password
     this.salt = uuidv4()
     this.hashed_password = this.securePassword(password)
   })
   .get(function () {
-    return this.password
+    return this._password
   })
 
 userSchema.methods = {
