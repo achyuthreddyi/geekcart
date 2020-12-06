@@ -1,7 +1,19 @@
 const express = require('express')
 const { check } = require('express-validator')
-const { signOut, signUp, signIn, isSignedIn } = require('./userController')
+const {
+  signOut,
+  signUp,
+  signIn,
+  isSignedIn,
+  getUserById,
+  getUser,
+  isAuthenticated,
+  updateUser,
+  userPurchaseList
+} = require('./userController')
 const router = express.Router()
+
+router.param('userId', getUserById)
 
 router.post(
   '/signup',
@@ -28,9 +40,12 @@ router.post(
   ],
   signIn
 )
-router.post('/signout', signOut)
-router.get('/test', isSignedIn, (req, res) => {
-  res.json(req.auth)
-})
+// router.get('/:userId', isSignedIn, isAuthenticated, getUser)
+router.get('/signout', signOut)
+router
+  .route('/:userId')
+  .get(isSignedIn, isAuthenticated, getUser)
+  .put(isSignedIn, isAuthenticated, updateUser)
+router.get('/order/:userId', isSignedIn, isAuthenticated, userPurchaseList)
 
 module.exports = router
