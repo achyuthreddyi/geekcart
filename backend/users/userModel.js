@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const crypto = require('crypto')
 const { v4: uuidv4 } = require('uuid')
+const { error } = require('console')
 
 const userSchema = new mongoose.Schema(
   {
@@ -34,11 +35,11 @@ const userSchema = new mongoose.Schema(
     role: {
       type: Number,
       default: 0
-    },
-    purchases: {
-      type: Array,
-      default: []
     }
+    // purchases: {
+    //   type: Array,
+    //   default: []
+    // }
   },
   { timestamps: true }
 )
@@ -74,4 +75,110 @@ userSchema.methods = {
   }
 }
 
-module.exports = mongoose.model('User', userSchema)
+const user = mongoose.model('User', userSchema)
+
+user.getUserById = async id => {
+  console.log('coming in hte model ', id)
+  try {
+    const userDB = await user.findById(id).select('-hashed_password -salt')
+
+    console.log('user from the getuserbyid', userDB)
+    return userDB
+  } catch (err) {
+    return {
+      error: 'error getting the user by Id',
+      err
+    }
+  }
+}
+
+user.getUserByEmail = async email => {
+  try {
+    return await user.findOne({ email })
+  } catch (err) {
+    return {
+      error: 'error getting the user by email',
+      err
+    }
+  }
+}
+
+user.createUser = async newUser => {
+  try {
+    return await user.create(newUser)
+  } catch (err) {
+    return {
+      error: 'error creating the new user',
+      err
+    }
+  }
+}
+
+user.updateUser = async userData => {
+  try {
+    const { userId, newdata } = userData
+    const userDB = await user.findById(userId).select('-hashed_password -salt')
+    if (userDB) {
+      userDB.name = newdata.name || userDB.name
+      userDB.email = newdata.email || userDB.email
+      if (newdata.password) {
+        user.password = newdata.password
+      }
+      return await userDB.save()
+    } else {
+      return {
+        error: ' user does not exists in our records'
+      }
+    }
+  } catch (err) {
+    return {
+      error: 'user not being able to update  from the database',
+      err
+    }
+  }
+}
+
+user.checkPassword = async userData => {
+  const { email, password } = userData
+
+  try {
+    const userDB = await user.findOne({ email })
+    if (!userDB.authenticate(password)) {
+      return {
+        error: 'user email and password did not match'
+      }
+    } else {
+      return userDB
+    }
+  } catch (err) {
+    return {
+      error: 'user not being able to fetch from the database',
+      err
+    }
+  }
+}
+
+user.removeUser = async email => {
+  try {
+    const userDB = await user.findOne({ email })
+    return await userDB.remove()
+  } catch (err) {
+    return {
+      error: 'error deleting the user from the database',
+      err
+    }
+  }
+}
+
+user.getAllUsers = async _ => {
+  try {
+    return await user.find()
+  } catch (err) {
+    return {
+      error: 'Error loading all the users',
+      err
+    }
+  }
+}
+
+module.exports = user

@@ -1,19 +1,19 @@
 const express = require('express')
 const { check } = require('express-validator')
+const { isSignedIn, isAdmin } = require('../middleware/authMiddleware')
 const {
   signOut,
   signUp,
   signIn,
-  isSignedIn,
-  getUserById,
   getUser,
-  isAuthenticated,
   updateUser,
-  userPurchaseList
+  deleteUser,
+  getAllUsers
 } = require('./userController')
+
 const router = express.Router()
 
-router.param('userId', getUserById)
+// router.param('userId', getUserParam)
 
 router.post(
   '/signup',
@@ -44,8 +44,12 @@ router.post(
 router.get('/signout', signOut)
 router
   .route('/:userId')
-  .get(isSignedIn, isAuthenticated, getUser)
-  .put(isSignedIn, isAuthenticated, updateUser)
-router.get('/order/:userId', isSignedIn, isAuthenticated, userPurchaseList)
+  .get(isSignedIn, getUser)
+  .put(isSignedIn, updateUser)
+  .delete(isSignedIn, deleteUser)
+
+router.route('/admin/userlist').get(isSignedIn, isAdmin, getAllUsers)
+
+// router.get('/order/:userId', isSignedIn, isAuthenticated, userPurchaseList)
 
 module.exports = router

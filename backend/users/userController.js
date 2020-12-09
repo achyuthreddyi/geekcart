@@ -1,101 +1,7 @@
 const { validationResult } = require('express-validator')
 const { generateToken } = require('../config/generateToken')
-const User = require('./userModel')
-const Order = require('../orders/orderModel')
-const expresJwt = require('express-jwt')
-
-// database functionalities
-
-// registering a new user
-const registerUser = async user => {
-  try {
-    const email = user.email
-    const userExists = await User.findOne({ email })
-
-    if (userExists) {
-      return {
-        error: 'user already exists'
-      }
-    } else {
-      return await User.create(user)
-    }
-  } catch (err) {
-    return {
-      error: 'user not able to get stored in the database'
-    }
-  }
-}
-// getting a user
-const getUserByIdDB = async userId => {
-  try {
-    const user = await User.findById(userId).select('-hashed_password -salt')
-    if (user) {
-      return user
-    } else {
-      return {
-        error: 'user not found in the database'
-      }
-    }
-  } catch (err) {
-    return {
-      error: 'user not being able to fetch from the database',
-      err
-    }
-  }
-}
-
-const checkPassword = async user => {
-  const { email, password } = user
-  try {
-    const user = await User.findOne({ email })
-    if (!user.authenticate(password)) {
-      return {
-        error: 'user email and password did not match'
-      }
-    } else {
-      return user
-    }
-  } catch (err) {
-    return {
-      error: 'user not being able to fetch from the database',
-      err
-    }
-  }
-}
-// FIXME: change the naming conventiosn
-const updateUserDB = async data => {
-  const { userId, newdata } = data
-  console.log('in update user db ', userId, newdata)
-  try {
-    const user = await User.findById(userId).select('-hashed_password -salt')
-    if (user) {
-      user.name = String(newdata.name) || user.name
-      user.email = String(newdata.email) || user.email
-      if (newdata.password) {
-        user.password = newdata.password
-      }
-    }
-    const updatedUser = await user.save()
-    return updatedUser
-  } catch (err) {
-    return {
-      error: 'user not being able to update  from the database',
-      err
-    }
-  }
-}
-
-const getOrdersDB = async userId => {
-  try {
-    const order = await Order.find({ user: userId })
-    order.populate('user', '_id name email')
-  } catch (err) {
-    return {
-      error: 'orders not being able to fetch  from the database',
-      err
-    }
-  }
-}
+// const User = require('./userModel')
+const user = require('./userModel')
 
 // controller functions
 // @desc    register a new user
@@ -103,8 +9,6 @@ const getOrdersDB = async userId => {
 // @access  Public
 
 exports.signUp = async (req, res) => {
-  const result = await registerUser(req.body)
-
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -112,16 +16,22 @@ exports.signUp = async (req, res) => {
     })
   }
 
-  if (!result.error) {
-    res.status(201).json(result)
+  if (await user.getUserByEmail(req.body.email)) {
+    return res.status(400).json({
+      error: 'user already exits'
+    })
+  }
+
+  const newUser = await user.createUser(req.body)
+  if (!newUser.error) {
+    res.status(201).json(newUser)
   } else {
-    res.status(400).send(result)
+    res.status(400).send(newUser)
   }
 }
 
 exports.signIn = async (req, res) => {
   const { email, password } = req.body
-
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -129,13 +39,12 @@ exports.signIn = async (req, res) => {
     })
   }
 
-  const result = await checkPassword({ email, password })
+  const result = await user.checkPassword({ email, password })
 
   if (!result.error) {
     const payload = {
       _id: result._id
     }
-
     const token = generateToken(payload)
     const { _id, name, email, role } = result
     res.cookie('token', token, { expire: new Date() + 99999 })
@@ -160,94 +69,72 @@ exports.signOut = (req, res) => {
   })
 }
 
+// @desc    update the user profile
+// @route   GET /api/users/profile
+// @access  Private/
 exports.updateUser = async (req, res) => {
   const newdata = req.body
-  const userId = req.profile._id
-  console.log('user id in the update use method ', newdata.name)
+  const userId = req.params.id
 
-  const result = await updateUserDB({ userId, newdata })
-  if (!result.error) {
-    res.status(200).json(result)
+  const updatedUser = await user.updateUser({ userId, newdata })
+
+  if (!updatedUser.error) {
+    res.status(200).json(updatedUser)
   } else {
-    res.status(400).json(result)
+    res.status(400).json(updatedUser)
   }
 }
 
-exports.getUser = (req, res) => {
-  return res.json(req.profile)
+// @desc    get user profile
+// @route   GET /api/users/:id
+// @access  Private
+exports.getUser = async (req, res) => {
+  res.status(200).json(req.user)
 }
 
-exports.userPurchaseList = async (req, res) => {
-  const result = await getOrdersDB(req.profile._id)
-  if (!result.error) {
-    res.status(200).json(result)
+// @desc    delete a user
+// @route   DELETE /api/users/:id
+// @access  Private/Admin
+exports.deleteUser = async (req, res) => {
+  const { email } = req.body
+  const userExists = await user.getUserByEmail(email)
+
+  if (userExists) {
+    console.log('user exists ', userExists)
+    const deletedUser = await user.removeUser(email)
+    if (!deletedUser.error) {
+      res.status(200).json(deletedUser)
+    } else {
+      res.status(400).json(deletedUser)
+    }
   } else {
-    res.status(400).json(result)
-  }
-}
-// protected routes
-exports.isSignedIn = expresJwt({
-  secret: process.env.JWT_SECRET,
-  userProperty: 'auth'
-})
-
-// custom middlewares
-
-exports.isAuthenticated = (req, res, next) => {
-  const checker = req.profile && req.auth && req.profile._id == req.auth._id
-  if (!checker) {
-    return res.status(403).json({
-      error: 'Access denied'
-    })
-  }
-  next()
-}
-
-exports.isAdmin = (req, res, next) => {
-  if (req.profile.role === 0) {
-    return res.status(403).json({
-      error: 'You are not an admin'
+    res.status(404).json({
+      error: 'user does not exists in the database'
     })
   }
 }
 
-exports.getUserById = async (req, res, next, id) => {
-  const result = await getUserByIdDB(id)
-
-  if (!result.error) {
-    req.profile = result
-    next()
+// @desc    get all users to the admin
+// @route   GET /api/users/
+// @access  Private/Admin
+exports.getAllUsers = async (req, res) => {
+  console.log('getting in the userlist method')
+  const userList = await user.getAllUsers()
+  if (!userList.error) {
+    res.status(200).json(userList)
   } else {
-    res.status(400).json(result)
+    res.status(400).json(userList)
   }
 }
 
-exports.pushOrderInPurchaseList = async (req, res, next) => {
-  try {
-    const purchases = []
-    req.body.order.products.forEach(product => {
-      purchases.push({
-        _id: product._id,
-        name: product.name,
-        description: product.description,
-        category: product.category,
-        quantity: product.quantity,
-        amount: req.body.order.amount,
-        transaction_id: req.body.order.transaction_id
-      })
-    })
+// exports.getUserParam = async (req, res, next, id) => {
+//   const fetchedUser = await user.getUserById(id)
+//   console.log('fetched user ', fetchedUser)
 
-    // store this in DB
-    const orderList = await User.findByIdAndUpdate(
-      { _id: req.profile._id },
-      { $push: { purchases: purchases } },
-      { new: true }
-    )
-    console.log(orderList)
-    next()
-  } catch (error) {
-    res.status(400).json({
-      error: 'order list not updated to the user document'
-    })
-  }
-}
+//   if (!fetchedUser) {
+//     res.status(400).json(fetchedUser)
+//   } else {
+//     req.profile = fetchedUser
+//     next()
+//   }
+// }
