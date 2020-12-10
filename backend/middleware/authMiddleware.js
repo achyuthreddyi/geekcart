@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const user = require('../users/userModel')
 
 exports.isSignedIn = async (req, res, next) => {
+  console.log('coming inside the issigned in method')
   let token
   if (
     req.headers.authorization &&
@@ -18,12 +19,12 @@ exports.isSignedIn = async (req, res, next) => {
       }
       next()
     } catch (err) {
-      return {
+      res.status(400).json({
         error: 'Not authorized'
-      }
+      })
     }
   } else {
-    res.status(401).json({
+    return res.status(401).json({
       error: 'No token '
     })
   }

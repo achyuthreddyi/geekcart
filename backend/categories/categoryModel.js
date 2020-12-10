@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { deleteCategory } = require('./categoryController')
 
 const categorySchema = new mongoose.Schema(
   {

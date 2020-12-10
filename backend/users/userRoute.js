@@ -40,16 +40,13 @@ router.post(
   ],
   signIn
 )
-// router.get('/:userId', isSignedIn, isAuthenticated, getUser)
 router.get('/signout', signOut)
 router
   .route('/:userId')
   .get(isSignedIn, getUser)
-  .put(isSignedIn, updateUser)
-  .delete(isSignedIn, deleteUser)
+  .put(isSignedIn, isAdmin, updateUser)
+  .delete(isSignedIn, isAdmin, deleteUser)
 
 router.route('/admin/userlist').get(isSignedIn, isAdmin, getAllUsers)
-
-// router.get('/order/:userId', isSignedIn, isAuthenticated, userPurchaseList)
 
 module.exports = router

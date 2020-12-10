@@ -6,7 +6,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const userRoute = require('./users/userRoute')
 const categoryRoute = require('./categories/categoryRoute')
-
+const productRoute = require('./products/productRoute')
 connectDB()
 
 app.use(express.json())
@@ -16,6 +16,7 @@ app.use(cookieParser())
 // Routes
 app.use('/api/user', userRoute)
 app.use('/api/category', categoryRoute)
+app.use('/api/product', productRoute)
 
 // error handlers
 app.use(errorHandler)

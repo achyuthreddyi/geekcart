@@ -5,8 +5,7 @@ const category = require('./categoryModel')
 // @access  Private/Admin
 
 exports.createCategory = async (req, res) => {
-  console.log('coming ito the category controller')
-  console.log(await category.getDocumentByName(req.body.name))
+  console.log('in create category')
   if ((await category.getDocumentByName(req.body.name)).length > 0) {
     return res.status(400).json({
       error: 'this category already exists'
@@ -44,7 +43,7 @@ exports.getCategory = async (req, res) => {
 
 // @desc    updating category by id
 // @route   GET /api/category/:categoryId
-// @access  Public
+// @access  Private/Admin
 
 exports.updateCategory = async (req, res) => {
   console.log('req.body', req.body)
@@ -61,12 +60,10 @@ exports.updateCategory = async (req, res) => {
 }
 
 exports.deleteCategory = async (req, res) => {
-  const deletedCategory = await category.deleteDocument(req.category._id)
-  if (!deletedCategory.error) {
-    res.status(200).json(deletedCategory)
-  } else {
-    res.status(400).json(deletedCategory)
-  }
+  await category.deleteDocument(req.category._id)
+  res.status(200).json({
+    message: 'successfully deleted the category'
+  })
 }
 
 // middleware
@@ -74,7 +71,7 @@ exports.getCategoryById = async (req, res, next, id) => {
   const categoryDB = await category.getDocumentById(id)
   console.log('category database', categoryDB)
   if (!categoryDB) {
-    res.status(404).send('category not found in the database')
+    return res.status(404).json({ error: 'category not found in the database' })
   }
   if (!categoryDB.error) {
     req.category = categoryDB
