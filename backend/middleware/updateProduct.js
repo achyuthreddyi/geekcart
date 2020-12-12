@@ -5,7 +5,6 @@ const product = require('../products/productModel')
 
 exports.updateProduct = async (req, res, next) => {
   let updateProduct = await product.getDocumentById(req.product._id)
-  console.log('updated product ', updateProduct)
 
   try {
     const form = new formidable.IncomingForm()

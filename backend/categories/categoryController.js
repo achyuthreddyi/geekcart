@@ -5,7 +5,6 @@ const category = require('./categoryModel')
 // @access  Private/Admin
 
 exports.createCategory = async (req, res) => {
-  console.log('in create category')
   if ((await category.getDocumentByName(req.body.name)).length > 0) {
     return res.status(400).json({
       error: 'this category already exists'
@@ -46,8 +45,6 @@ exports.getCategory = async (req, res) => {
 // @access  Private/Admin
 
 exports.updateCategory = async (req, res) => {
-  console.log('req.body', req.body)
-
   const updatedCategory = await category.updateDocument({
     categoryId: req.category._id,
     newCategory: req.body
@@ -69,7 +66,7 @@ exports.deleteCategory = async (req, res) => {
 // middleware
 exports.getCategoryById = async (req, res, next, id) => {
   const categoryDB = await category.getDocumentById(id)
-  console.log('category database', categoryDB)
+
   if (!categoryDB) {
     return res.status(404).json({ error: 'category not found in the database' })
   }

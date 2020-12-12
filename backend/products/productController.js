@@ -6,7 +6,6 @@ const product = require('./productModel')
 
 exports.createProduct = async (req, res) => {
   const newProduct = req.body
-  console.log('new product ', newProduct)
 
   const createdProduct = await product.createDocument(newProduct)
   if (!createdProduct.error) {

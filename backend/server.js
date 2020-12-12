@@ -8,11 +8,16 @@ const userRoute = require('./users/userRoute')
 const categoryRoute = require('./categories/categoryRoute')
 const productRoute = require('./products/productRoute')
 const uploadProduct = require('./middleware/uploadProduct')
+const morgan = require('morgan')
 connectDB()
 
 app.use(express.json())
 app.use(cors())
 app.use(cookieParser())
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'))
+}
 
 // Routes
 app.use('/api/user', userRoute)

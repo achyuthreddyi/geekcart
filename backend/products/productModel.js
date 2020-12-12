@@ -79,7 +79,6 @@ const productSchema = new mongoose.Schema(
 const product = mongoose.model('Product', productSchema)
 
 product.createDocument = async newProduct => {
-  console.log('new product in the model ', newProduct)
   try {
     return await product.create(newProduct)
   } catch (err) {
@@ -146,7 +145,7 @@ product.getDocumentByName = async name => {
 product.updateDocument = async productData => {
   try {
     const { productId, newproduct } = productData
-    console.log('product Id in updateDocument', productId)
+
     const productDB = await product.findById(productId)
     if (productDB) {
       productDB.name = newproduct.name || product.name
