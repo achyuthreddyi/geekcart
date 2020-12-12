@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const userRoute = require('./users/userRoute')
 const categoryRoute = require('./categories/categoryRoute')
 const productRoute = require('./products/productRoute')
+const uploadProduct = require('./middleware/uploadProduct')
 connectDB()
 
 app.use(express.json())
@@ -17,6 +18,7 @@ app.use(cookieParser())
 app.use('/api/user', userRoute)
 app.use('/api/category', categoryRoute)
 app.use('/api/product', productRoute)
+app.use('/api/upload', uploadProduct)
 
 // error handlers
 app.use(errorHandler)

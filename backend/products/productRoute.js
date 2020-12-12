@@ -1,12 +1,14 @@
 const express = require('express')
 const { isSignedIn, isAdmin } = require('../middleware/authMiddleware')
 const { updateProduct } = require('../middleware/updateProduct')
-const { uploadProduct } = require('../middleware/uploadProduct')
+// const { uploadProduct } = require('../middleware/uploadProduct')
 const {
   getProductById,
   getAllProducts,
   getProduct,
-  photo,
+  createProduct,
+
+  // photo,
   deleteProduct
 } = require('./productController')
 const router = express.Router()
@@ -20,8 +22,8 @@ router
   .put(isSignedIn, isAdmin, updateProduct)
   .delete(isSignedIn, isAdmin, deleteProduct)
 
-router.route('/photo/:productId').get(photo)
+// router.route('/photo/:productId').get(photo)
 
-router.route('/admin/create').post(isSignedIn, isAdmin, uploadProduct)
+router.route('/admin/create').post(isSignedIn, isAdmin, createProduct)
 
 module.exports = router

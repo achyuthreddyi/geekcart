@@ -1,5 +1,21 @@
 const product = require('./productModel')
 
+// @desc    creating a product
+// @route   POST /api/products/admin
+// @access  Private/Admin
+
+exports.createProduct = async (req, res) => {
+  const newProduct = req.body
+  console.log('new product ', newProduct)
+
+  const createdProduct = await product.createDocument(newProduct)
+  if (!createdProduct.error) {
+    res.status(200).json(createdProduct)
+  } else {
+    res.status(400).json(createdProduct)
+  }
+}
+
 // @desc    get all products
 // @route   POST /api/products/
 // @access  Public

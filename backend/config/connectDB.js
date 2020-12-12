@@ -1,9 +1,10 @@
 const mongoose = require('mongoose')
 require('colors')
-
+const uri =
+  'mongodb+srv://achyuth:achyuth@demo.xlnni.mongodb.net/geekcart?retryWrites=true&w=majority'
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
+    const conn = await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true
