@@ -1,19 +1,24 @@
-import React, { useEffect } from 'react'
-import axios from 'axios'
+import React from 'react'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { listProducts } from './actions/productActions'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Container } from 'react-bootstrap'
+
+import Footer from './components/Footer'
+import Header from './components/Header'
+import Home from './screens/Home'
 
 const App = () => {
-  const dispatch = useDispatch()
-  const productList = useSelector(state => state.productList)
-  useEffect(() => {
-    dispatch(listProducts())
-  }, [dispatch])
-  console.log(productList)
-  console.log(axios.get('http://localhost:5000/api/product/'))
-
-  return <h1>achyuth Reddy</h1>
+  return (
+    <Router>
+      <Header />
+      <main className='py-3'>
+        <Container>
+          <Route path='/' component={Home} exact />
+        </Container>
+      </main>
+      <Footer />
+    </Router>
+  )
 }
 
 export default App
