@@ -33,7 +33,8 @@ exports.getAllProducts = async (req, res) => {
 // @access  Public
 
 exports.getProduct = async (req, res) => {
-  req.product.photo = undefined
+  // req.product.photo = undefined
+  console.log('inside the getProduct')
   return res.status(200).json(req.product)
 }
 
@@ -71,6 +72,7 @@ exports.deleteProduct = async (req, res) => {
 // middleware
 
 exports.getProductById = async (req, res, next, id) => {
+  console.log('inside the getProductById', id)
   const productDB = await product.getDocumentById(id)
   if (!productDB) {
     return res.status(404).json({
