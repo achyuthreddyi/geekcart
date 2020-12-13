@@ -50,12 +50,10 @@ exports.signIn = async (req, res) => {
     res.cookie('token', token, { expire: new Date() + 99999 })
     res.status(200).json({
       token,
-      user: {
-        _id,
-        name,
-        email,
-        role
-      }
+      _id,
+      name,
+      email,
+      role
     })
   } else {
     res.status(400).send(result)

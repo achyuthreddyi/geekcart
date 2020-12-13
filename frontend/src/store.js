@@ -5,14 +5,24 @@ import {
   productDetailReducer,
   productListReducer
 } from './reducers/productReducer'
+import { userLoginReducer, userRegisterReducer } from './reducers/userReducer'
 
 // const reducer = {}
 const reducer = combineReducers({
   productList: productListReducer,
-  productDetails: productDetailReducer
-})
+  productDetails: productDetailReducer,
 
-const initialState = {}
+  userLogin: userLoginReducer,
+  userRegister: userRegisterReducer
+})
+/* eslint-disable */
+const userInfoFromStorage = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null
+
+const initialState = {
+  userLogin: userInfoFromStorage
+}
 
 const middlewares = [thunk]
 

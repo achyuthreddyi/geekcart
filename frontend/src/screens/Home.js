@@ -18,6 +18,7 @@ const Home = () => {
     <div>
       {loading && <Loader />}
       {/* {error && <Message variant='success' children={error}></Message>} */}
+      {/* eslint-disable */}
       <h1>Latest Products @ cheapest prices</h1>
 
       {loading ? (

@@ -20,7 +20,7 @@ router.post(
   [
     check('name')
       .isLength({ min: 3 })
-      .withMessage('must be at least 3 chars long'),
+      .withMessage('name must be at least 3 chars long'),
     check('email')
       .isEmail()
       .withMessage('must be a proper email')
@@ -32,7 +32,7 @@ router.post(
   [
     check('password')
       .isLength({ min: 3 })
-      .withMessage('must be at least 3 chars long'),
+      .withMessage('password must be at least 3 chars long'),
 
     check('email')
       .isEmail()
