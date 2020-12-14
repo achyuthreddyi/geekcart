@@ -3,6 +3,7 @@ const user = require('../users/userModel')
 
 exports.isSignedIn = async (req, res, next) => {
   let token
+  console.log('coming in the auth middleware', req.headers)
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -11,6 +12,7 @@ exports.isSignedIn = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1]
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
       req.user = await user.getUserById(decoded._id)
+      console.log('requsers user setting in hte request object', req.body)
       if (!req.user) {
         return res.status(401).json({
           error: 'user does not exits in the database'

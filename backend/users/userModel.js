@@ -120,8 +120,34 @@ user.updateUser = async userData => {
     if (userDB) {
       userDB.name = newdata.name || userDB.name
       userDB.email = newdata.email || userDB.email
-      if (newdata.password) {
-        user.password = newdata.password
+      userDB.role = newdata.role || userDB.role
+      return await userDB.save()
+    } else {
+      return {
+        error: ' user does not exists in our records'
+      }
+    }
+  } catch (err) {
+    return {
+      error: 'user not being able to update  from the database',
+      err
+    }
+  }
+}
+
+user.updateUserDocument = async newData => {
+  try {
+    const email = newData.email
+
+    const userDB = await user
+      .findOne({ email })
+      .select('-hashed_password -salt')
+    if (userDB) {
+      userDB.name = newData.name || userDB.name
+      userDB.email = newData.email || userDB.email
+      userDB.role = newData.role || userDB.role
+      if (newData.password) {
+        user.password = newData.password
       }
       return await userDB.save()
     } else {

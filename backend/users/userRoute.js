@@ -8,7 +8,8 @@ const {
   getUser,
   updateUser,
   deleteUser,
-  getAllUsers
+  getAllUsers,
+  updateUserProfile
 } = require('./userController')
 
 const router = express.Router()
@@ -42,8 +43,12 @@ router.post(
 )
 router.get('/signout', signOut)
 router
-  .route('/:userId')
+  .route('/profile')
   .get(isSignedIn, getUser)
+  .put(isSignedIn, updateUserProfile)
+
+router
+  .route('/:userId')
   .put(isSignedIn, isAdmin, updateUser)
   .delete(isSignedIn, isAdmin, deleteUser)
 

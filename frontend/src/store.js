@@ -5,7 +5,13 @@ import {
   productDetailReducer,
   productListReducer
 } from './reducers/productReducer'
-import { userLoginReducer, userRegisterReducer } from './reducers/userReducer'
+import {
+  userListReducer,
+  userLoginReducer,
+  userProfileReducer,
+  userRegisterReducer,
+  userUpdateProfileReducer
+} from './reducers/userReducer'
 
 // const reducer = {}
 const reducer = combineReducers({
@@ -13,15 +19,21 @@ const reducer = combineReducers({
   productDetails: productDetailReducer,
 
   userLogin: userLoginReducer,
-  userRegister: userRegisterReducer
+  userRegister: userRegisterReducer,
+  userProfile: userProfileReducer,
+  userUpdateProfile: userUpdateProfileReducer,
+  userList: userListReducer
 })
 /* eslint-disable */
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
   : null
-
+/* eslint-enable */
+console.log('userInfoFromStorage', userInfoFromStorage)
 const initialState = {
-  userLogin: userInfoFromStorage
+  userLogin: {
+    userInfo: userInfoFromStorage
+  }
 }
 
 const middlewares = [thunk]

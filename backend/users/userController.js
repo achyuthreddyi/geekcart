@@ -67,14 +67,34 @@ exports.signOut = (req, res) => {
   })
 }
 
-// @desc    update the user profile
-// @route   GET /api/users/profile
+// @desc    update the user profile by the admin
+// @route   PUT /api/users/id
 // @access  Private/
 exports.updateUser = async (req, res) => {
   const newdata = req.body
   const userId = req.params.id
 
   const updatedUser = await user.updateUser({ userId, newdata })
+
+  if (!updatedUser.error) {
+    res.status(200).json(updatedUser)
+  } else {
+    res.status(400).json(updatedUser)
+  }
+}
+// @desc    update the user profile
+// @route   GET /api/users/profile
+// @access  Private/
+exports.updateUserProfile = async (req, res) => {
+  const newData = req.body
+
+  console.log('in the update user profile ', newData)
+
+  const updatedUser = await user.updateUserDocument(newData)
+  const payload = {
+    _id: updatedUser._id
+  }
+  updatedUser.token = generateToken(payload)
 
   if (!updatedUser.error) {
     res.status(200).json(updatedUser)
