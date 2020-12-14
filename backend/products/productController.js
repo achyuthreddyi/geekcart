@@ -5,9 +5,7 @@ const product = require('./productModel')
 // @access  Private/Admin
 
 exports.createProduct = async (req, res) => {
-  const newProduct = req.body
-
-  const createdProduct = await product.createDocument(newProduct)
+  const createdProduct = await product.createDocument(req.user._id)
   if (!createdProduct.error) {
     res.status(200).json(createdProduct)
   } else {
@@ -42,17 +40,18 @@ exports.getProduct = async (req, res) => {
 // @route   PUT /api/products/admin
 // @access  Private/Admin
 
-// exports.updateProduct = async (req, res) => {
-//   const updatedProduct = await product.updateDocument({
-//     productId: req.product._id,
-//     newproduct: req.body
-//   })
-//   if (!updatedProduct.error) {
-//     res.status(200).json(updatedProduct)
-//   } else {
-//     res.status(400).json(updatedProduct)
-//   }
-// }
+exports.updateProduct = async (req, res) => {
+  console.log('coming in update product method')
+  const updatedProduct = await product.updateDocument({
+    productId: req.product._id,
+    newProductDetails: req.body
+  })
+  if (!updatedProduct.error) {
+    res.status(200).json(updatedProduct)
+  } else {
+    res.status(400).json(updatedProduct)
+  }
+}
 
 // @desc    deleting a product
 // @route   PUT /api/products/admin

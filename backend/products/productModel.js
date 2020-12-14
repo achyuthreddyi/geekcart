@@ -78,24 +78,25 @@ const productSchema = new mongoose.Schema(
 
 const product = mongoose.model('Product', productSchema)
 
-product.createDocument = async newProduct => {
+product.createDocument = async id => {
   try {
-    return await product.create(newProduct)
+    const newProduct = await product.create({
+      name: 'Sample Product',
+      price: 0,
+      user: id,
+      image: '/images/sample.jpeg',
+      brand: 'SAmple Brand',
+      category: 'Sample Category',
+      countInStock: 0,
+      numReviews: 0,
+      description: 'sample description'
+    })
+    return newProduct
   } catch (err) {
     return {
-      error: 'error creating a new product',
-      err
+      error: 'error creating a product'
     }
   }
-
-  // try {
-  //   return await product().createProduct(req)
-  // } catch (err) {
-  //   return {
-  //     error: 'product not able to upload to the database',
-  //     err
-  //   }
-  // }
 }
 
 product.createListOfDocuments = async products => {
@@ -144,16 +145,20 @@ product.getDocumentByName = async name => {
 
 product.updateDocument = async productData => {
   try {
-    const { productId, newproduct } = productData
+    const { productId, newProductDetails } = productData
 
     const productDB = await product.findById(productId)
     if (productDB) {
-      productDB.name = newproduct.name || product.name
-      productDB.description = newproduct.description || product.description
-      productDB.price = newproduct.price || product.price
-      productDB.category = newproduct.category || product.category
-      productDB.stock = newproduct.stock || product.stock
-      productDB.photo = newproduct.photo || product.photo
+      productDB.name = newProductDetails.name || product.name
+      productDB.description =
+        newProductDetails.description || product.description
+      productDB.price = newProductDetails.price || product.price
+      productDB.category = newProductDetails.category || product.category
+      productDB.brand = newProductDetails.brand || product.brand
+      productDB.countInStock =
+        newProductDetails.countInStock || product.countInStock
+      productDB.sold = newProductDetails.sold || product.sold
+      productDB.image = newProductDetails.image || product.image
 
       const updatedproduct = await productDB.save()
       return updatedproduct

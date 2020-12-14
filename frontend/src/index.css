@@ -20,6 +20,11 @@ h2 {
 .rating span {
   margin: 0.1rem;
 }
+.progress-bar {
+  height: 5px;
+  background: red;
+  margin-top: 20px;
+}
 /* carousel */
 .carousel-item-next,
 .carousel-item-prev,

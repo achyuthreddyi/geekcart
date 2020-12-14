@@ -1,6 +1,6 @@
 const express = require('express')
 const { isSignedIn, isAdmin } = require('../middleware/authMiddleware')
-const { updateProduct } = require('../middleware/updateProduct')
+// const { updateProduct } = require('../middleware/updateProduct')
 // const { uploadProduct } = require('../middleware/uploadProduct')
 const {
   getProductById,
@@ -9,7 +9,8 @@ const {
   createProduct,
 
   // photo,
-  deleteProduct
+  deleteProduct,
+  updateProduct
 } = require('./productController')
 const router = express.Router()
 

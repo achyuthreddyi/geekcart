@@ -6,7 +6,11 @@ import Loader from '../components/Loader'
 import { listUsers } from '../actions/userActions'
 import { LinkContainer } from 'react-router-bootstrap'
 
-import { deleteProduct, listProducts } from '../actions/productActions'
+import {
+  deleteProduct,
+  listProducts,
+  createProduct
+} from '../actions/productActions'
 
 const ProductListScreen = ({ history }) => {
   const dispatch = useDispatch()
@@ -24,9 +28,20 @@ const ProductListScreen = ({ history }) => {
     success: successDelete
   } = productDelete
 
+  const productCreate = useSelector(state => state.productCreate)
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    product: createdProduct
+  } = productCreate
+
   useEffect(() => {
     if (!userInfo || userInfo.role === 0) {
       history.push('/login')
+    }
+    if (successCreate) {
+      history.push(`/admin/product/${createdProduct._id}/edit`)
     } else {
       dispatch(listProducts())
     }
@@ -34,17 +49,20 @@ const ProductListScreen = ({ history }) => {
     dispatch,
     history,
     userInfo,
-    successDelete
-    // successCreate,
+    successDelete,
+    successCreate
     // createdProduct
   ])
+
   const deleteHandler = id => {
     if (window.confirm('are you sure')) {
       dispatch(deleteProduct(id))
     }
   }
 
-  const createProductHandler = () => {}
+  const createProductHandler = () => {
+    dispatch(createProduct())
+  }
   return (
     <>
       <Row className='align-items-center'>
@@ -70,6 +88,7 @@ const ProductListScreen = ({ history }) => {
               <th>Price</th>
               <th>Category</th>
               <th>Brand</th>
+              <th>Edit</th>
             </tr>
           </thead>
           <tbody>
