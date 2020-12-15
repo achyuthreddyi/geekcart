@@ -9,7 +9,7 @@ import { listProductsDetails } from '../actions/productActions'
 import Loader from '../components/Loader'
 
 const ProductScreen = ({ history, match }) => {
-  const [quantity, setQuantity] = useState(0)
+  const [quantity, setQuantity] = useState(1)
 
   const dispatch = useDispatch()
 
@@ -20,7 +20,10 @@ const ProductScreen = ({ history, match }) => {
     dispatch(listProductsDetails(match.params.id))
   }, [dispatch])
 
-  const addToCart = () => {}
+  const addToCart = () => {
+    setQuantity(1)
+    history.push(`/cart/${match.params.id}?qty=${quantity}`)
+  }
   return (
     <>
       <Link className='btn btn-dark my-3' to='/'>

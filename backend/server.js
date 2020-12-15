@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const userRoute = require('./users/userRoute')
 const categoryRoute = require('./categories/categoryRoute')
 const productRoute = require('./products/productRoute')
-const uploadProduct = require('./middleware/uploadProduct')
+const orderRoute = require('./orders/orderRoute')
 const morgan = require('morgan')
 connectDB()
 
@@ -23,7 +23,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/user', userRoute)
 app.use('/api/category', categoryRoute)
 app.use('/api/product', productRoute)
-app.use('/api/upload', uploadProduct)
+// app.use('/api/upload', uploadProduct)
+app.use('/api/order', orderRoute)
 
 // error handlers
 app.use(errorHandler)

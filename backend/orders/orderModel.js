@@ -1,39 +1,109 @@
 const mongoose = require('mongoose')
-const { ObjectId } = mongoose.Schema
+const product = require('../products/productModel')
 
-const ProductCartSchema = new mongoose.Schema({
-  product: {
-    type: ObjectId,
-    ref: 'Product'
-  },
-  name: String,
-  count: Number,
-  price: Number
-})
-const ProductCart = mongoose.model('ProductCart', ProductCartSchema)
-
-const orderSchema = new mongoose.Schema(
+const orderSchema = mongoose.Schema(
   {
-    // TODO: work on other stuff like address and other stuff
-    products: [ProductCartSchema],
-    transaction_id: {},
-    amount: {
-      type: Number
-    },
-    address: {
-      type: String,
-      maxlength: 1000
-    },
-    updated: Date,
     user: {
-      type: ObjectId,
-      ref: 'User',
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    },
+    orderItems: [
+      {
+        name: {
+          type: String,
+          required: true
+        },
+        quantity: {
+          type: Number,
+          required: true
+        },
+        image: {
+          type: String,
+          required: true
+        },
+        price: {
+          type: Number,
+          required: true
+        },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: 'Product'
+        }
+      }
+    ],
+    shippingAddress: {
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      country: { type: String, required: true }
+    },
+    paymentMethod: {
+      type: String,
       required: true
+    },
+    paymentResult: {
+      id: { type: String },
+      status: { type: String },
+      update_time: { type: String },
+      email_address: { type: String }
+    },
+    taxPrice: {
+      type: Number,
+      required: true,
+      default: 0.0
+    },
+    shippingPrice: {
+      type: Number,
+      required: true,
+      default: 0.0
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+      default: 0.0
+    },
+    isPaid: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    paidAt: {
+      type: Date
+    },
+    isDelivered: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    deliveredAt: {
+      type: Date
     }
   },
-  { timestamps: true }
+  {
+    timestamps: true
+  }
 )
 
-const Order = mongoose.model('Order', orderSchema)
+const order = mongoose.model('Order', orderSchema)
 
-module.exports = { Order, ProductCart }
+order.createDocument = async ({ orderDetails, userId }) => {
+  try {
+    const newOrder = await product.create({
+      orderItems: orderDetails.orderItems,
+      user: userId,
+      shippingAddress: orderDetails.shippingAddress,
+      paymentMethod: orderDetails.paymentMethod,
+      itemsPrice: orderDetails.itemsPrice,
+      taxPrice: orderDetails.taxPrice,
+      // shippingPrice: orderDetails.shippingAddress,
+      totalPrice: orderDetails.totalPrice
+    })
+    return newOrder
+  } catch (err) {
+    return {
+      error: 'error creating the new order'
+    }
+  }
+}
