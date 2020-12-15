@@ -1,6 +1,7 @@
 import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
+  CART_SAVE_PAYMENT_METHOD,
   CART_SAVE_SHIPPING_ADDRESS
 } from '../constants/cartConstants'
 const axios = require('axios')
@@ -41,5 +42,15 @@ export const saveShippingAddress = data => (dispatch, getState) => {
   })
   /* eslint-disable */
   localStorage.setItem('shippingAddress', JSON.stringify(data))
+  /* eslint-enable */
+}
+
+export const savePaymentMethod = data => dispatch => {
+  dispatch({
+    type: CART_SAVE_PAYMENT_METHOD,
+    payload: data
+  })
+  /* eslint-disable */
+  localStorage.setItem('paymentMethod', JSON.stringify(data))
   /* eslint-enable */
 }
