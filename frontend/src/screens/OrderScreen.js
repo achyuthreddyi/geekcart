@@ -13,7 +13,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { getOrderDetails, payOrder } from '../actions/orderActions'
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder
+} from '../actions/orderActions'
 import CheckoutSteps from '../components/CheckOutSteps'
 import { PayPalButton } from 'react-paypal-button-v2'
 import {
@@ -84,7 +88,9 @@ const OrderScreen = ({ match, history }) => {
     }
   }, [dispatch, order, orderId, successPay, successDeliver])
 
-  const deliverHandler = () => {}
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order))
+  }
   const successPaymentHandler = paymentResult => {
     console.log('paymentResult', paymentResult)
     dispatch(payOrder(orderId, paymentResult))
@@ -264,21 +270,21 @@ const OrderScreen = ({ match, history }) => {
                     </>
                   )}
 
-                  {/* {loadingDeliver && <Loader />}
-              {userInfo &&
-                userInfo.isAdmin &&
-                order.isPaid &&
-                !order.isDelivered && (
-                  <ListGroup.Item>
-                    <Button
-                      type='button'
-                      className='btn btn-block'
-                      onClick={deliverHandler}
-                    >
-                      Mark As Delivered
-                    </Button>
-                  </ListGroup.Item>
-                )} */}
+                  {loadingDeliver && <Loader />}
+                  {userInfo &&
+                    userInfo.role === 1 &&
+                    order.isPaid &&
+                    !order.isDelivered && (
+                      <ListGroup.Item>
+                        <Button
+                          type='button'
+                          className='btn btn-block'
+                          onClick={deliverHandler}
+                        >
+                          Mark As Delivered
+                        </Button>
+                      </ListGroup.Item>
+                    )}
                 </ListGroup>
               </Card>
             </Col>

@@ -23,7 +23,6 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/user', userRoute)
 app.use('/api/category', categoryRoute)
 app.use('/api/product', productRoute)
-// app.use('/api/upload', uploadProduct)
 app.use('/api/orders', orderRoute)
 
 app.get('/api/config/paypal', (req, res) =>
