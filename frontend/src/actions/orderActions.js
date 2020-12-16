@@ -176,7 +176,7 @@ export const listMyOrders = () => async (dispatch, getState) => {
       }
     }
     const { data } = await axios.get(
-      'http://localhost:5000//api/orders/myorders',
+      'http://localhost:5000/api/orders/myorders',
       config
     )
 
