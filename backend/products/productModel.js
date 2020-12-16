@@ -57,7 +57,7 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    // FIXME:  put this into s3 buckets and get the link
+    // FIXME:  put this into s3 buckets and get the link Solved
     image: {
       type: String,
       required: true

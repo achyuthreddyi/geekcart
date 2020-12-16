@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 
 import { AiOutlineArrowLeft } from 'react-icons/ai'
-import { productDetailReducer } from '../reducers/productReducer'
 import { listProductsDetails } from '../actions/productActions'
 import Loader from '../components/Loader'
 

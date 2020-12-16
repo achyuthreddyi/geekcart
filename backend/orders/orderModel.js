@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const product = require('../products/productModel')
+const { updateProduct } = require('../products/productController')
 
 const orderSchema = mongoose.Schema(
   {
@@ -19,8 +19,8 @@ const orderSchema = mongoose.Schema(
           required: true
         },
         image: {
-          type: String,
-          required: true
+          type: String
+          // required: true
         },
         price: {
           type: Number,
@@ -86,24 +86,99 @@ const orderSchema = mongoose.Schema(
   }
 )
 
-const order = mongoose.model('Order', orderSchema)
+const Order = mongoose.model('Order', orderSchema)
+// module.exports = Order
 
-order.createDocument = async ({ orderDetails, userId }) => {
+Order.createDocument = async req => {
+  const {
+    orderItems,
+    shippingAddress,
+    paymentMethod,
+    itemsPrice,
+    taxPrice,
+    shippingPrice,
+    totalPrice
+  } = req.body
+  console.log('inside the created document ')
+
   try {
-    const newOrder = await product.create({
-      orderItems: orderDetails.orderItems,
-      user: userId,
-      shippingAddress: orderDetails.shippingAddress,
-      paymentMethod: orderDetails.paymentMethod,
-      itemsPrice: orderDetails.itemsPrice,
-      taxPrice: orderDetails.taxPrice,
-      // shippingPrice: orderDetails.shippingAddress,
-      totalPrice: orderDetails.totalPrice
+    const newOrder = new Order({
+      orderItems,
+      user: req.user._id,
+      shippingAddress,
+      paymentMethod,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice
     })
-    return newOrder
+    const createdOrder = await newOrder.save()
+    console.log('order created ', createdOrder)
+    return createdOrder
   } catch (err) {
     return {
-      error: 'error creating the new order'
+      error: 'error creating the new order',
+      err
     }
   }
 }
+Order.getDocumentById = async id => {
+  try {
+    return await Order.findById(id).populate('user', 'name email')
+  } catch (err) {
+    return {
+      error: 'error getting the product by id',
+      err
+    }
+  }
+}
+Order.getDocumentsByUser = async id => {
+  try {
+    return await Order.find({ user: id })
+  } catch (err) {
+    return {
+      error: 'error getting the user orders'
+    }
+  }
+}
+Order.updateDocumentToPaid = async req => {
+  try {
+    const order = await Order.findById(req.params.id)
+
+    if (order) {
+      order.isPaid = true
+      order.paidAt = Date.now()
+      order.paymentResult = {
+        id: req.body.id,
+        status: req.body.status,
+        update_time: req.body.update_time,
+        email_address: req.body.email_address
+      }
+    }
+    const updatedOrder = await order.save()
+    return updatedOrder
+  } catch (err) {
+    return {
+      error: 'could not update the payment status',
+      err
+    }
+  }
+}
+Order.updateDocumentToDelivered = async req => {
+  const order = await Order.findById(req.params.id)
+  try {
+    if (order) {
+      order.isDelivered = true
+      order.deliveredAt = Date.now()
+      const updatedOrder = await order.save()
+      return updatedOrder
+    }
+  } catch (err) {
+    return {
+      error: 'could not update the delivered status',
+      err
+    }
+  }
+}
+
+module.exports = Order

@@ -24,10 +24,11 @@ app.use('/api/user', userRoute)
 app.use('/api/category', categoryRoute)
 app.use('/api/product', productRoute)
 // app.use('/api/upload', uploadProduct)
-app.use('/api/order', orderRoute)
+app.use('/api/orders', orderRoute)
 
-// error handlers
-app.use(errorHandler)
+app.get('/api/config/paypal', (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+)
 
 app.get('/', (req, res) => {
   res.send('hi')
@@ -36,9 +37,9 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log(`app working on port ${PORT}`))
 
-function errorHandler (err, req, res, next) {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode
-  res.status(statusCode).json({
-    message: err.message
-  })
-}
+// function errorHandler (err, req, res, next) {
+//   const statusCode = res.statusCode === 200 ? 500 : res.statusCode
+//   res.status(statusCode).json({
+//     message: err.message
+//   })
+// }
