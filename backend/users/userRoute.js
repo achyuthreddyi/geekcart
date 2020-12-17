@@ -51,6 +51,7 @@ router
   .route('/:userId')
   .put(isSignedIn, isAdmin, updateUser)
   .delete(isSignedIn, isAdmin, deleteUser)
+  .get(isSignedIn, isAdmin, getUser)
 
 router.route('/admin/userlist').get(isSignedIn, isAdmin, getAllUsers)
 

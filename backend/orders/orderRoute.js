@@ -5,12 +5,16 @@ const {
   updateOrderToPaid,
   getOrderById,
   updateOrderToDelivered,
-  getMyOrders
+  getMyOrders,
+  getAllOrders
 } = require('./orderController')
 
 const router = express.Router()
 
-router.route('/').post(isSignedIn, createOrder)
+router
+  .route('/')
+  .post(isSignedIn, createOrder)
+  .get(isSignedIn, isAdmin, getAllOrders)
 router.route('/myorders').get(isSignedIn, getMyOrders)
 router.route('/:id').get(isSignedIn, getOrderById)
 router.route('/:id/pay').put(isSignedIn, updateOrderToPaid)

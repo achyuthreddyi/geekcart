@@ -3,9 +3,21 @@ const Order = require('./orderModel')
 // @desc    create a new Order
 // @route   POST /api/orders
 // @access  Private
-
 exports.createOrder = async (req, res) => {
   const createdOrder = await Order.createDocument(req)
+  if (!createdOrder.error) {
+    console.log('inside the created order success')
+    res.status(200).json(createdOrder)
+  } else {
+    console.log('inside the error in order creation')
+    res.status(400).json(createdOrder)
+  }
+}
+// @desc    get all orders to the admin
+// @route   GET /api/orders
+// @access  Private/Admin
+exports.getAllOrders = async (req, res) => {
+  const createdOrder = await Order.getAllDocuments()
   if (!createdOrder.error) {
     console.log('inside the created order success')
     res.status(200).json(createdOrder)

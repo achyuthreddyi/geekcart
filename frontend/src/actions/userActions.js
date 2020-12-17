@@ -11,13 +11,20 @@ import {
   USER_PROFILE_REQUEST,
   USER_PROFILE_SUCCESS,
   USER_PROFILE_FAIL,
+  USER_PROFILE_RESET,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
-  USER_LIST_FAIL
+  USER_LIST_FAIL,
+  USER_LIST_RESET,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL
 } from '../constants/userConstants'
+
+import { MY_ORDER_DETAILS_RESET } from '../constants/orderConstants'
 
 export const login = (email, password) => async (dispatch, getState) => {
   console.log('in the dispatch of the user actions', dispatch)
@@ -114,18 +121,18 @@ export const logout = () => async dispatch => {
   dispatch({
     type: USER_REGISTER_LOGOUT
   })
-  // dispatch({
-  //   type: USER_PROFILE_RESET
-  // })
-  // dispatch({
-  //   type: MY_ORDER_DETAILS_RESET
-  // })
-  // dispatch({
-  //   type: USER_LIST_RESET
-  // })
+  dispatch({
+    type: USER_PROFILE_RESET
+  })
+  dispatch({
+    type: MY_ORDER_DETAILS_RESET
+  })
+  dispatch({
+    type: USER_LIST_RESET
+  })
 }
 
-export const getuserProfile = _ => async (dispatch, getState) => {
+export const getuserProfile = id => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_PROFILE_REQUEST
@@ -142,7 +149,7 @@ export const getuserProfile = _ => async (dispatch, getState) => {
       }
     }
     const { data } = await axios.get(
-      'http://localhost:5000/api/user/profile',
+      `http://localhost:5000/api/user/${id}`,
       config
     )
 
@@ -238,6 +245,47 @@ export const listUsers = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    })
+  }
+}
+
+export const updateUser = user => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_UPDATE_REQUEST
+    })
+
+    const {
+      userLogin: { userInfo }
+    } = getState()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    }
+    const { data } = await axios.put(
+      `http://localhost:5000/api/user/${user._id}`,
+      user,
+      config
+    )
+
+    dispatch({
+      type: USER_UPDATE_SUCCESS
+    })
+
+    dispatch({
+      type: USER_PROFILE_SUCCESS,
+      payload: data
+    })
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

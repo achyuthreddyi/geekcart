@@ -141,6 +141,16 @@ Order.getDocumentsByUser = async id => {
     }
   }
 }
+
+Order.getAllDocuments = async id => {
+  try {
+    return await Order.find().populate('user', 'name email')
+  } catch (err) {
+    return {
+      error: 'error getting all the orders'
+    }
+  }
+}
 Order.updateDocumentToPaid = async req => {
   try {
     const order = await Order.findById(req.params.id)

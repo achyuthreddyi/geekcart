@@ -76,10 +76,10 @@ exports.updateUser = async (req, res) => {
 
   const updatedUser = await user.updateUser({ userId, newdata })
 
-  if (!updatedUser.error) {
-    res.status(200).json(updatedUser)
-  } else {
+  if (updatedUser.error) {
     res.status(400).json(updatedUser)
+  } else {
+    res.status(200).json(updatedUser)
   }
 }
 // @desc    update the user profile

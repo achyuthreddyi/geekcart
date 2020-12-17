@@ -116,11 +116,12 @@ user.createUser = async newUser => {
 user.updateUser = async userData => {
   try {
     const { userId, newdata } = userData
-    const userDB = await user.findById(userId).select('-hashed_password -salt')
+    const userDB = await user.findOne({ userId })
+    console.log('userId in the update user', userDB)
     if (userDB) {
       userDB.name = newdata.name || userDB.name
       userDB.email = newdata.email || userDB.email
-      userDB.role = newdata.role || userDB.role
+      userDB.role = newdata.role
       return await userDB.save()
     } else {
       return {
@@ -145,7 +146,7 @@ user.updateUserDocument = async newData => {
     if (userDB) {
       userDB.name = newData.name || userDB.name
       userDB.email = newData.email || userDB.email
-      userDB.role = newData.role || userDB.role
+
       if (newData.password) {
         user.password = newData.password
       }
