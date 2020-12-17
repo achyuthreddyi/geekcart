@@ -113,10 +113,11 @@ user.createUser = async newUser => {
   }
 }
 
-user.updateUser = async userData => {
+user.updateUser = async req => {
   try {
-    const { userId, newdata } = userData
-    const userDB = await user.findOne({ userId })
+    const newdata = req.body
+
+    const userDB = await user.findById(req.params.userId)
     console.log('userId in the update user', userDB)
     if (userDB) {
       userDB.name = newdata.name || userDB.name

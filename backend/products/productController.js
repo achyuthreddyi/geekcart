@@ -68,6 +68,33 @@ exports.deleteProduct = async (req, res) => {
   }
 }
 
+// @desc    Create a new review
+// @route   POST / api/products/:id/reviews
+// @access  Private
+
+exports.createProductReview = async (req, res) => {
+  const reviewedProduct = await product.addReviewDocument(req)
+  if (!reviewedProduct.error) {
+    res.status(201).json(reviewedProduct)
+  } else {
+    res.status(400).json(reviewedProduct)
+  }
+}
+
+// @desc    Get top rated products
+// @route   GET / api/products/top
+// @access  Public
+exports.getTopProducts = async (req, res) => {
+  const topProducts = await product.getTopDocuments()
+  if (topProducts) {
+    res.status(200).json(topProducts)
+  } else {
+    res.status(400).json({
+      error: 'error loading top products'
+    })
+  }
+}
+
 // middleware
 
 exports.getProductById = async (req, res, next, id) => {

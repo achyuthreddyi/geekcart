@@ -7,23 +7,25 @@ const {
   getAllProducts,
   getProduct,
   createProduct,
-
-  // photo,
+  createProductReview,
   deleteProduct,
-  updateProduct
+  updateProduct,
+  getTopProducts
 } = require('./productController')
 const router = express.Router()
 
 router.param('productId', getProductById)
 
 router.route('/').get(getAllProducts)
+router.route('/top').get(getTopProducts)
+
 router
   .route('/:productId')
   .get(getProduct)
   .put(isSignedIn, isAdmin, updateProduct)
   .delete(isSignedIn, isAdmin, deleteProduct)
 
-// router.route('/photo/:productId').get(photo)
+router.route('/:productId/reviews').post(isSignedIn, createProductReview)
 
 router.route('/admin/create').post(isSignedIn, isAdmin, createProduct)
 

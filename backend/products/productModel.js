@@ -186,6 +186,50 @@ product.deleteDocument = async id => {
   }
 }
 
+product.addReviewDocument = async req => {
+  try {
+    const { rating, comment } = req.body
+    const productDB = req.product
+    console.log('product to review ', productDB)
+    if (productDB) {
+      const alreadyReviewed = product.reviews.find(
+        item => item.user.toString() === req.user._id.toString()
+      )
+      if (alreadyReviewed) {
+        return {
+          error: 'You have already reviewwed this product'
+        }
+      }
+      const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user._id
+      }
+      product.reviews.push(review)
+      product.numReviews = product.reviews.length
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length
+
+      const reviewedProduct = await product.save()
+      return reviewedProduct
+    }
+  } catch (err) {
+    return {
+      error: 'error adding a new review',
+      err
+    }
+  }
+}
+product.getTopDocuments = async _ => {
+  const topProducts = await product
+    .find({})
+    .sort({ rating: -1 })
+    .limit(3)
+  return topProducts
+}
+
 module.exports = product
 
 // productSchema.methods = {

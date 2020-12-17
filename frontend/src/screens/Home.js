@@ -5,6 +5,7 @@ import { listProducts } from '../actions/productActions'
 import Product from '../components/Product'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import ProductCarousel from '../components/ProductCarousel'
 const Home = () => {
   const dispatch = useDispatch()
   const productList = useSelector(state => state.productList)
@@ -16,6 +17,7 @@ const Home = () => {
   console.log(productList)
   return (
     <div>
+      {!loading && <ProductCarousel />}
       {loading && <Loader />}
       {/* {error && <Message variant='success' children={error}></Message>} */}
       {/* eslint-disable */}

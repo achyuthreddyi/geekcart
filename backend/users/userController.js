@@ -71,10 +71,7 @@ exports.signOut = (req, res) => {
 // @route   PUT /api/users/id
 // @access  Private/
 exports.updateUser = async (req, res) => {
-  const newdata = req.body
-  const userId = req.params.id
-
-  const updatedUser = await user.updateUser({ userId, newdata })
+  const updatedUser = await user.updateUser(req)
 
   if (updatedUser.error) {
     res.status(400).json(updatedUser)
