@@ -6,6 +6,7 @@ import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { listProductsDetails } from '../actions/productActions'
 import Loader from '../components/Loader'
+import Rating from '../components/Rating'
 
 const ProductScreen = ({ history, match }) => {
   const [quantity, setQuantity] = useState(1)
@@ -45,6 +46,11 @@ const ProductScreen = ({ history, match }) => {
               ;
               <ListGroup.Item>
                 <h2>rating</h2>
+
+                <Rating
+                  value={product.rating}
+                  text={`${product.numReviews} reviews `}
+                />
               </ListGroup.Item>
               <ListGroup.Item>Price: &#x20B9; {product.price}</ListGroup.Item>
               <ListGroup.Item>
