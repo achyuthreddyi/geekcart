@@ -29,10 +29,6 @@ app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 )
 
-app.get('/', (req, res) => {
-  res.send('hi')
-})
-
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log(`app working on port ${PORT}`))
 

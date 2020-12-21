@@ -21,6 +21,7 @@ exports.signUp = async (req, res) => {
       error: 'user already exits'
     })
   }
+  // TODO: implemet the sign in
 
   const newUser = await user.createUser(req.body)
   if (!newUser.error) {

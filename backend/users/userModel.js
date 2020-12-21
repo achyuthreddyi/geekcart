@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0
     }
+
     // purchases: {
     //   type: Array,
     //   default: []
@@ -63,6 +64,7 @@ userSchema.methods = {
       return ''
     } else {
       try {
+        // FIXME: change this
         return crypto
           .createHmac('sha256', this.salt)
           .update(plainPassword)
@@ -77,7 +79,7 @@ userSchema.methods = {
 const user = mongoose.model('User', userSchema)
 
 user.getUserById = async id => {
-  console.log('coming in hte model ', id)
+  console.log('coming in the model ', id)
   try {
     const userDB = await user.findById(id).select('-hashed_password -salt')
 
@@ -112,7 +114,7 @@ user.createUser = async newUser => {
     }
   }
 }
-
+// TODO: throw it in th controllers
 user.updateUser = async req => {
   try {
     const newdata = req.body

@@ -120,3 +120,22 @@ exports.photo = (req, res, next) => {
   }
   next()
 }
+
+// @desc    Get top rated products
+// @route   GET / api/products/top
+// @access  Public
+// exports.getTopProducts = async (req, res) => {
+//   const allProducts = await product.getAllDocuments()
+//   const topProducts = allProducts
+//     .sort({
+//       rating: -1
+//     })
+//     .limit(3)
+//   if (topProducts) {
+//     res.status(200).json(topProducts)
+//   } else {
+//     res.status(400).json({
+//       error: 'error loading top products'
+//     })
+//   }
+// }

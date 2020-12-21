@@ -37,11 +37,12 @@ const App = () => {
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
           <Route path='/profile' component={ProfileScreen} />
+          {/* admin routes */}
           <Route path='/admin/userlist' component={UserListScreen} />
           <Route path='/admin/productlist' component={ProductListScreen} />
           <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
           <Route path='/admin/orderlist' component={OrderListScreen} />
-          ;<Route path='/admin/user/:id/edit' component={UserEditScreen} />
+          <Route path='/admin/user/:id/edit' component={UserEditScreen} />
         </Container>
       </main>
       <Footer />

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { updateProduct } = require('../products/productController')
 
 const orderSchema = mongoose.Schema(
   {

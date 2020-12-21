@@ -24,7 +24,10 @@ router.post(
       .withMessage('name must be at least 3 chars long'),
     check('email')
       .isEmail()
-      .withMessage('must be a proper email')
+      .withMessage('must be a proper email '),
+    check('password')
+      .isLength({ min: 3 })
+      .withMessage('password must be at least 3 chars long')
   ],
   signUp
 )
@@ -37,7 +40,7 @@ router.post(
 
     check('email')
       .isEmail()
-      .withMessage('must be a proper email')
+      .withMessage('must be a proper email in the express ')
   ],
   signIn
 )
