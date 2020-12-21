@@ -18,14 +18,13 @@ router.param('productId', getProductById)
 
 router.route('/').get(getAllProducts)
 router.route('/top').get(getTopProducts)
+router.route('/:productId/reviews').post(isSignedIn, createProductReview)
 
 router
   .route('/:productId')
   .get(getProduct)
   .put(isSignedIn, isAdmin, updateProduct)
   .delete(isSignedIn, isAdmin, deleteProduct)
-
-router.route('/:productId/reviews').post(isSignedIn, createProductReview)
 
 router.route('/admin/create').post(isSignedIn, isAdmin, createProduct)
 

@@ -175,6 +175,14 @@ export const createProductReview = (productId, review) => async (
         Authorization: `Bearer ${userInfo.token}`
       }
     }
+    // console.log(
+    //   await axios.post(
+    //     `http://localhost:5000/api/product/${productId}/reviews`,
+    //     review,
+    //     config
+    //   )
+    // )
+
     await axios.post(
       `http://localhost:5000/api/product/${productId}/reviews`,
       review,

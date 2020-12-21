@@ -192,6 +192,7 @@ product.deleteDocument = async id => {
 
 product.addReviewDocument = async req => {
   try {
+    console.log('coming in the addreviewproduct', req.product)
     const { rating, comment } = req.body
     const productDB = req.product
     console.log('product to review ', productDB)
@@ -200,6 +201,7 @@ product.addReviewDocument = async req => {
         item => item.user.toString() === req.user._id.toString()
       )
       if (alreadyReviewed) {
+        console.log('product already reviewwed')
         return {
           error: 'You have already reviewed this product'
         }

@@ -34,7 +34,7 @@ const ProductScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch(listProductsDetails(match.params.id))
-  }, [dispatch])
+  }, [dispatch, successProductReview])
 
   const addToCart = () => {
     setQuantity(1)
@@ -188,6 +188,7 @@ const ProductScreen = ({ history, match }) => {
                           as='textarea'
                           row='3'
                           value={comment}
+                          onChange={e => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
 
