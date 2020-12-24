@@ -78,14 +78,14 @@ const productSchema = new mongoose.Schema(
 
 const product = mongoose.model('Product', productSchema)
 
-product.createDocument = async id => {
+exports.createDocument = async id => {
   try {
     const newProduct = await product.create({
       name: 'Sample Product',
       price: 0,
       user: id,
       image: '/images/sample.jpeg',
-      brand: 'SAmple Brand',
+      brand: 'Sample Brand',
       category: 'Sample Category',
       countInStock: 0,
       numReviews: 0,
@@ -99,18 +99,19 @@ product.createDocument = async id => {
   }
 }
 
-product.createListOfDocuments = async products => {
-  try {
-    const productList = await product.insertMany(products)
-    return productList
-  } catch (err) {
-    return {
-      error: 'error uploading many products'
-    }
-  }
-}
+//  Only for the initial phase
+// exports.createListOfDocuments = async products => {
+//   try {
+//     const productList = await product.insertMany(products)
+//     return productList
+//   } catch (err) {
+//     return {
+//       error: 'error uploading many products'
+//     }
+//   }
+// }
 
-product.getAllDocuments = async _ => {
+exports.getAllDocuments = async _ => {
   try {
     return await product.find()
   } catch (err) {
@@ -121,7 +122,7 @@ product.getAllDocuments = async _ => {
   }
 }
 
-product.getDocumentById = async id => {
+exports.getDocumentById = async id => {
   try {
     return await product.findById(id)
   } catch (err) {
@@ -132,7 +133,7 @@ product.getDocumentById = async id => {
   }
 }
 
-product.getDocumentByName = async name => {
+exports.getDocumentByName = async name => {
   try {
     return await product.find({ name })
   } catch (err) {
@@ -143,7 +144,7 @@ product.getDocumentByName = async name => {
   }
 }
 
-product.updateDocument = async productData => {
+exports.updateDocument = async productData => {
   try {
     const { productId, newProductDetails } = productData
     // FIXME: change this things
@@ -179,7 +180,7 @@ product.updateDocument = async productData => {
   }
 }
 
-product.deleteDocument = async id => {
+exports.deleteDocument = async id => {
   try {
     return await product.deleteOne({ _id: id })
   } catch (err) {
@@ -190,7 +191,7 @@ product.deleteDocument = async id => {
   }
 }
 
-product.addReviewDocument = async req => {
+exports.addReviewDocument = async req => {
   try {
     console.log('coming in the addreviewproduct', req.product)
     const { rating, comment } = req.body
@@ -230,7 +231,7 @@ product.addReviewDocument = async req => {
     }
   }
 }
-product.getTopDocuments = async _ => {
+exports.getTopDocuments = async _ => {
   const topProducts = await product
     .find()
     .sort({ rating: -1 })
@@ -238,7 +239,7 @@ product.getTopDocuments = async _ => {
   return topProducts
 }
 
-module.exports = product
+// module.exports = product
 
 // productSchema.methods = {
 //   createProduct: async function (req) {

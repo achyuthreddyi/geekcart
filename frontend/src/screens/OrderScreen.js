@@ -59,7 +59,7 @@ const OrderScreen = ({ match, history }) => {
 
   useEffect(() => {
     if (!userInfo) {
-      history.pushState('/login')
+      history.push('/login')
     }
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get(
@@ -86,7 +86,7 @@ const OrderScreen = ({ match, history }) => {
         setSdkReady(true)
       }
     }
-  }, [dispatch, order, orderId, successPay, successDeliver])
+  }, [dispatch, order, orderId, successPay, successDeliver, userInfo])
 
   const deliverHandler = () => {
     dispatch(deliverOrder(order))

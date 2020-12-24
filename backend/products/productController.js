@@ -1,11 +1,21 @@
-const product = require('./productModel')
+// const product = require('./productModel')
+const {
+  createDocument,
+  getAllDocuments,
+  getDocumentById,
+  getDocumentByName,
+  updateDocument,
+  deleteDocument,
+  addReviewDocument,
+  getTopDocuments
+} = require('./productModel')
 
 // @desc    creating a product
 // @route   POST /api/products/admin
 // @access  Private/Admin
 
 exports.createProduct = async (req, res) => {
-  const createdProduct = await product.createDocument(req.user._id)
+  const createdProduct = await createDocument(req.user._id)
   if (!createdProduct.error) {
     res.status(200).json(createdProduct)
   } else {
@@ -18,7 +28,7 @@ exports.createProduct = async (req, res) => {
 // @access  Public
 
 exports.getAllProducts = async (req, res) => {
-  const products = await product.getAllDocuments()
+  const products = await getAllDocuments()
   if (!products.error) {
     res.status(200).json(products)
   } else {
@@ -42,7 +52,7 @@ exports.getProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   console.log('coming in update product method')
-  const updatedProduct = await product.updateDocument({
+  const updatedProduct = await updateDocument({
     productId: req.product._id,
     newProductDetails: req.body
   })
@@ -58,7 +68,7 @@ exports.updateProduct = async (req, res) => {
 // @access  Private/Admin
 
 exports.deleteProduct = async (req, res) => {
-  const updatedProduct = await product.deleteDocument(req.product._id)
+  const updatedProduct = await deleteDocument(req.product._id)
   if (!updatedProduct.error) {
     res.status(200).json({
       success: 'deletion of the product is succeess ful'
@@ -75,7 +85,7 @@ exports.deleteProduct = async (req, res) => {
 exports.createProductReview = async (req, res) => {
   console.log('hey')
   console.log('is it coming in the review')
-  const reviewedProduct = await product.addReviewDocument(req)
+  const reviewedProduct = await addReviewDocument(req)
   if (!reviewedProduct.error) {
     res.status(201).json(reviewedProduct)
   } else {
@@ -87,7 +97,7 @@ exports.createProductReview = async (req, res) => {
 // @route   GET / api/products/top
 // @access  Public
 exports.getTopProducts = async (req, res) => {
-  const topProducts = await product.getTopDocuments()
+  const topProducts = await getTopDocuments()
   if (topProducts) {
     res.status(200).json(topProducts)
   } else {
@@ -101,7 +111,7 @@ exports.getTopProducts = async (req, res) => {
 
 exports.getProductById = async (req, res, next, id) => {
   console.log('inside the getProductById', req.originalUrl)
-  const productDB = await product.getDocumentById(id)
+  const productDB = await getDocumentById(id)
   console.log('getting the product inside the getProduct by id')
   if (!productDB) {
     return res.status(404).json({

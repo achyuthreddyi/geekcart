@@ -36,15 +36,19 @@ const CartScreen = ({ match, location, history }) => {
       <Col md={8}>
         <h1>Shopping Cart</h1>
         {cartItems.length === 0 ? (
-          <Message>
-            Your cart is empty!!Try out our amazing product lines
-            <Link className='btn btn-dark my-3' to='/'>
-              {' '}
-              <AiOutlineArrowLeft /> GoBack
-            </Link>
-          </Message>
+          <Link className='btn btn-dark my-3' to='/'>
+            <AiOutlineArrowLeft /> GoBack
+          </Link>
         ) : (
+          // <Message>
+          //   Your cart is empty!!Try out our amazing product lines
+          //   <Link className='btn btn-dark my-3' to='/'>
+          //     {' '}
+          //     <AiOutlineArrowLeft /> GoBack
+          //   </Link>
+          // </Message>
           <ListGroup variant='flush'>
+            <h1>products are there</h1>
             {cartItems.map(item => (
               <ListGroup.Item key={item.product}>
                 <Row>
