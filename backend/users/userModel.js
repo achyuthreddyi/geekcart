@@ -78,7 +78,7 @@ userSchema.methods = {
 
 const user = mongoose.model('User', userSchema)
 
-user.getUserById = async id => {
+exports.getUserById = async id => {
   console.log('coming in the model ', id)
   try {
     const userDB = await user.findById(id).select('-hashed_password -salt')
@@ -93,7 +93,7 @@ user.getUserById = async id => {
   }
 }
 
-user.getUserByEmail = async email => {
+exports.getUserByEmail = async email => {
   try {
     return await user.findOne({ email })
   } catch (err) {
@@ -104,7 +104,7 @@ user.getUserByEmail = async email => {
   }
 }
 
-user.createUser = async newUser => {
+exports.createUser = async newUser => {
   try {
     return await user.create(newUser)
   } catch (err) {
@@ -115,7 +115,7 @@ user.createUser = async newUser => {
   }
 }
 // TODO: throw it in th controllers
-user.updateUser = async req => {
+exports.updateUser = async req => {
   try {
     const newdata = req.body
 
@@ -139,7 +139,7 @@ user.updateUser = async req => {
   }
 }
 
-user.updateUserDocument = async newData => {
+exports.updateUserDocument = async newData => {
   try {
     const email = newData.email
 
@@ -167,7 +167,7 @@ user.updateUserDocument = async newData => {
   }
 }
 
-user.checkPassword = async userData => {
+exports.checkPassword = async userData => {
   const { email, password } = userData
 
   try {
@@ -187,7 +187,7 @@ user.checkPassword = async userData => {
   }
 }
 
-user.removeUser = async email => {
+exports.removeUser = async email => {
   try {
     const userDB = await user.findOne({ email })
     return await userDB.remove()
@@ -199,7 +199,7 @@ user.removeUser = async email => {
   }
 }
 
-user.getAllUsers = async _ => {
+exports.getAllUsers = async _ => {
   try {
     return await user.find()
   } catch (err) {
@@ -209,5 +209,3 @@ user.getAllUsers = async _ => {
     }
   }
 }
-
-module.exports = user

@@ -1,7 +1,16 @@
 const { validationResult } = require('express-validator')
 const { generateToken } = require('../config/generateToken')
 // const User = require('./userModel')
-const user = require('./userModel')
+const {
+  getUserById,
+  getUserByEmail,
+  createUser,
+  updateUser,
+  updateUserDocument,
+  checkPassword,
+  removeUser,
+  getAllUsers
+} = require('./userModel')
 
 // controller functions
 // @desc    register a new user
@@ -16,14 +25,14 @@ exports.signUp = async (req, res) => {
     })
   }
 
-  if (await user.getUserByEmail(req.body.email)) {
+  if (await getUserByEmail(req.body.email)) {
     return res.status(400).json({
       error: 'user already exits'
     })
   }
   // TODO: implemet the sign in
 
-  const newUser = await user.createUser(req.body)
+  const newUser = await createUser(req.body)
   if (!newUser.error) {
     res.status(201).json(newUser)
   } else {
@@ -40,7 +49,7 @@ exports.signIn = async (req, res) => {
     })
   }
 
-  const result = await user.checkPassword({ email, password })
+  const result = await checkPassword({ email, password })
 
   if (!result.error) {
     const payload = {
@@ -72,7 +81,7 @@ exports.signOut = (req, res) => {
 // @route   PUT /api/users/id
 // @access  Private/
 exports.updateUser = async (req, res) => {
-  const updatedUser = await user.updateUser(req)
+  const updatedUser = await updateUser(req)
 
   if (updatedUser.error) {
     res.status(400).json(updatedUser)
@@ -88,7 +97,7 @@ exports.updateUserProfile = async (req, res) => {
 
   console.log('in the update user profile ', newData)
 
-  const updatedUser = await user.updateUserDocument(newData)
+  const updatedUser = await updateUserDocument(newData)
   const payload = {
     _id: updatedUser._id
   }
@@ -113,11 +122,11 @@ exports.getUser = async (req, res) => {
 // @access  Private/Admin
 exports.deleteUser = async (req, res) => {
   const { email } = req.body
-  const userExists = await user.getUserByEmail(email)
+  const userExists = await getUserByEmail(email)
 
   if (userExists) {
     console.log('user exists ', userExists)
-    const deletedUser = await user.removeUser(email)
+    const deletedUser = await removeUser(email)
     if (!deletedUser.error) {
       res.status(200).json(deletedUser)
     } else {
@@ -135,7 +144,7 @@ exports.deleteUser = async (req, res) => {
 // @access  Private/Admin
 exports.getAllUsers = async (req, res) => {
   console.log('getting in the userlist method')
-  const userList = await user.getAllUsers()
+  const userList = await getAllUsers()
   if (!userList.error) {
     res.status(200).json(userList)
   } else {
