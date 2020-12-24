@@ -88,7 +88,7 @@ const orderSchema = mongoose.Schema(
 const Order = mongoose.model('Order', orderSchema)
 // module.exports = Order
 
-Order.createDocument = async req => {
+exports.createDocument = async req => {
   const {
     orderItems,
     shippingAddress,
@@ -121,7 +121,7 @@ Order.createDocument = async req => {
     }
   }
 }
-Order.getDocumentById = async id => {
+exports.getDocumentById = async id => {
   try {
     return await Order.findById(id).populate('user', 'name email')
   } catch (err) {
@@ -131,7 +131,7 @@ Order.getDocumentById = async id => {
     }
   }
 }
-Order.getDocumentsByUser = async id => {
+exports.getDocumentsByUser = async id => {
   try {
     return await Order.find({ user: id })
   } catch (err) {
@@ -141,7 +141,7 @@ Order.getDocumentsByUser = async id => {
   }
 }
 
-Order.getAllDocuments = async id => {
+exports.getAllDocuments = async id => {
   try {
     return await Order.find().populate('user', 'name email')
   } catch (err) {
@@ -150,7 +150,7 @@ Order.getAllDocuments = async id => {
     }
   }
 }
-Order.updateDocumentToPaid = async req => {
+exports.updateDocumentToPaid = async req => {
   try {
     const order = await Order.findById(req.params.id)
 
@@ -173,7 +173,7 @@ Order.updateDocumentToPaid = async req => {
     }
   }
 }
-Order.updateDocumentToDelivered = async req => {
+exports.updateDocumentToDelivered = async req => {
   const order = await Order.findById(req.params.id)
   try {
     if (order) {
@@ -189,5 +189,3 @@ Order.updateDocumentToDelivered = async req => {
     }
   }
 }
-
-module.exports = Order

@@ -3,7 +3,7 @@ const {
   createDocument,
   getAllDocuments,
   getDocumentById,
-  getDocumentByName,
+  // getDocumentByName,
   updateDocument,
   deleteDocument,
   addReviewDocument,
