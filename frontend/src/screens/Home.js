@@ -6,22 +6,39 @@ import Product from '../components/Product'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import ProductCarousel from '../components/ProductCarousel'
-const Home = () => {
+import { Link } from 'react-router-dom'
+
+import { AiOutlineArrowLeft } from 'react-icons/ai'
+
+const Home = ({ match }) => {
+  const keyword = match.params.keyword
+
   const dispatch = useDispatch()
   const productList = useSelector(state => state.productList)
   const { loading, products, error } = productList
+
   useEffect(() => {
-    dispatch(listProducts())
+    dispatch(listProducts(keyword))
   }, [dispatch])
 
   console.log(productList)
   return (
     <div>
-      {!loading && <ProductCarousel />}
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
+        <Link to='/' className='btn btn-light'>
+          {' '}
+          <AiOutlineArrowLeft />
+          Go Back
+        </Link>
+      )}
+
+      {/* {!loading && <ProductCarousel />} */}
       {loading && <Loader />}
       {/* {error && <Message variant='success' children={error}></Message>} */}
       {/* eslint-disable */}
-      <h1>Latest Products @ cheapest prices</h1>
+      {!keyword && <h1>Latest Products @ cheapest prices</h1>}
 
       {loading ? (
         <Loader />

@@ -28,7 +28,16 @@ exports.createProduct = async (req, res) => {
 // @access  Public
 
 exports.getAllProducts = async (req, res) => {
-  const products = await getAllDocuments()
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i'
+        }
+      }
+    : {}
+
+  const products = await getAllDocuments(keyword)
   if (!products.error) {
     res.status(200).json(products)
   } else {

@@ -111,9 +111,9 @@ exports.createDocument = async id => {
 //   }
 // }
 
-exports.getAllDocuments = async _ => {
+exports.getAllDocuments = async keyword => {
   try {
-    return await Product.find()
+    return await Product.find({ ...keyword })
   } catch (err) {
     return {
       error: 'No products found in the database',

@@ -25,6 +25,8 @@ h2 {
   background: red;
   margin-top: 20px;
 }
+.product__image {
+}
 /* carousel */
 .carousel-item-next,
 .carousel-item-prev,

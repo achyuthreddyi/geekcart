@@ -23,11 +23,13 @@ import {
   PRODUCT_UPDATE_SUCCESS
 } from '../constants/productConstants'
 
-export const listProducts = () => async disapatch => {
+export const listProducts = (keyword = '') => async disapatch => {
   try {
     disapatch({ type: PRODUCT_LIST_REQUEST })
-    const { data } = await axios.get('http://localhost:5000/api/product/')
-    console.log(await axios.get('http://localhost:5000/api/product/'))
+    const { data } = await axios.get(
+      `http://localhost:5000/api/product?keyword=${keyword}`
+    )
+    // console.log(await axios.get('http://localhost:5000/api/product/'))
     disapatch({
       type: PRODUCT_LIST_SUCCESS,
       payload: data
