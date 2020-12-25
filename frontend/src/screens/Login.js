@@ -13,7 +13,7 @@ const Login = ({ location, history }) => {
   const dispatch = useDispatch()
 
   const userLogin = useSelector(state => state.userLogin)
-  const { userInfo } = userLogin
+  const { loading, error, userInfo } = userLogin
 
   const redirect = location.search ? location.search.split('=')[1] : '/'
 
@@ -34,8 +34,8 @@ const Login = ({ location, history }) => {
   return (
     <FormContainer>
       <h1>Sign In</h1>
-      {/* {loading && <Loader />} */}
-      {/* {error && <Message variant='danger'>{error}</Message>} */}
+      {loading && <Loader />}
+      {error && <Message variant='danger' error={error} />}
       {/* eslint-disable */}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId='email'>

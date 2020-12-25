@@ -76,12 +76,12 @@ userSchema.methods = {
   }
 }
 
-const user = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema)
 
 exports.getUserById = async id => {
   console.log('coming in the model ', id)
   try {
-    const userDB = await user.findById(id).select('-hashed_password -salt')
+    const userDB = await User.findById(id).select('-hashed_password -salt')
 
     console.log('user from the getuserbyid', userDB)
     return userDB
@@ -95,7 +95,7 @@ exports.getUserById = async id => {
 
 exports.getUserByEmail = async email => {
   try {
-    return await user.findOne({ email })
+    return await User.findOne({ email })
   } catch (err) {
     return {
       error: 'error getting the user by email',
@@ -106,7 +106,7 @@ exports.getUserByEmail = async email => {
 
 exports.createUser = async newUser => {
   try {
-    return await user.create(newUser)
+    return await User.create(newUser)
   } catch (err) {
     return {
       error: 'error creating the new user',
@@ -118,12 +118,17 @@ exports.createUser = async newUser => {
 exports.updateUser = async req => {
   try {
     const newdata = req.body
+    console.log('req object in the update user tantanatan', newdata)
+    const userDB = await User.findById(newdata._id)
 
-    const userDB = await user.findById(req.params.userId)
+    // const userDB = await User.updateOne(
+    //   { _id: newdata._id },
+    //   { name: newdata.name, email: newdata.email, role: newdata.role }
+    // )
     console.log('userId in the update user', userDB)
     if (userDB) {
-      userDB.name = newdata.name || userDB.name
-      userDB.email = newdata.email || userDB.email
+      userDB.name = newdata.name
+      userDB.email = newdata.email
       userDB.role = newdata.role
       return await userDB.save()
     } else {
@@ -131,7 +136,9 @@ exports.updateUser = async req => {
         error: ' user does not exists in our records'
       }
     }
+    // return userDB
   } catch (err) {
+    console.log('error while updating', err)
     return {
       error: 'user not being able to update  from the database',
       err
@@ -143,15 +150,15 @@ exports.updateUserDocument = async newData => {
   try {
     const email = newData.email
 
-    const userDB = await user
-      .findOne({ email })
-      .select('-hashed_password -salt')
+    const userDB = await User.findOne({ email }).select(
+      '-hashed_password -salt'
+    )
     if (userDB) {
       userDB.name = newData.name || userDB.name
       userDB.email = newData.email || userDB.email
 
       if (newData.password) {
-        user.password = newData.password
+        User.password = newData.password
       }
       return await userDB.save()
     } else {
@@ -171,7 +178,7 @@ exports.checkPassword = async userData => {
   const { email, password } = userData
 
   try {
-    const userDB = await user.findOne({ email })
+    const userDB = await User.findOne({ email })
     if (!userDB.authenticate(password)) {
       return {
         error: 'user email and password did not match'
@@ -188,8 +195,9 @@ exports.checkPassword = async userData => {
 }
 
 exports.removeUser = async email => {
+  console.log('user from the user model checking for the ', email)
   try {
-    const userDB = await user.findOne({ email })
+    const userDB = await User.findOne({ email })
     return await userDB.remove()
   } catch (err) {
     return {
@@ -201,7 +209,7 @@ exports.removeUser = async email => {
 
 exports.getAllUsers = async _ => {
   try {
-    return await user.find()
+    return await User.find()
   } catch (err) {
     return {
       error: 'Error loading all the users',

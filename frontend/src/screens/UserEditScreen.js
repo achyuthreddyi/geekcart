@@ -28,27 +28,14 @@ const UserEditScreen = ({ match, history }) => {
     success: successUpdate
   } = userUpdate
 
-  // useEffect(() => {
-  //   if (successUpdate) {
-  //     dispatch({ type: USER_UPDATE_RESET })
-  //     history.push('/admin/userlist')
-  //   } else {
-  //     if (!user || !user.name || user._id !== userId) {
-  //       dispatch(getuserProfile(userId))
-  //     } else {
-  //       setName(user.name)
-  //       setEmail(user.email)
-  //       setRole(user.role)
-  //     }
-  //   }
-  // }, [dispatch, history, userId, user, successUpdate])
-
   useEffect(() => {
-    if (!user || !user.name) {
-      dispatch(getuserProfile(userId))
+    if (successUpdate) {
+      dispatch({ type: USER_UPDATE_RESET })
+      history.push('/admin/userlist')
     }
-
-    if (user && user.name) {
+    if (!user.name || user._id !== userId) {
+      dispatch(getuserProfile(userId))
+    } else {
       setName(user.name)
       setEmail(user.email)
       setRole(user.role)
@@ -57,7 +44,7 @@ const UserEditScreen = ({ match, history }) => {
 
   const submitHandler = e => {
     e.preventDefault()
-    dispatch(updateUser({ _id: userId, name, email, role }))
+    dispatch(updateUser({ _id: userId, name: name, email: email, role: role }))
   }
 
   return (
@@ -71,7 +58,7 @@ const UserEditScreen = ({ match, history }) => {
 
         {loading && <Loader />}
         {errorUpdate && <Message variant='danger' error={errorUpdate} />}
-        {loading ? (
+        {loadingUpdate ? (
           <Loader />
         ) : error ? (
           <Message variant='danger' error={error} />
@@ -97,7 +84,11 @@ const UserEditScreen = ({ match, history }) => {
             </Form.Group>
             <Form.Group controlId='role'>
               <Form.Label>Change user Type</Form.Label>
-              <Form.Control as='select'>
+              <Form.Control
+                as='select'
+                value={role}
+                onChange={e => setRole(e.target.value)}
+              >
                 <option value={0}>Normal User</option>
                 <option value={1}>Admin</option>
                 <option value={2}>Seller</option>

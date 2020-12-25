@@ -165,7 +165,7 @@ const OrderScreen = ({ match, history }) => {
                 </ListGroup.Item>
 
                 {userInfo &&
-                  userInfo.isAdmin &&
+                  !(userInfo.role === 0) &&
                   order.isPaid &&
                   !order.isDelivered && (
                     <ListGroup.Item>

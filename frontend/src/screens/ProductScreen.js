@@ -11,6 +11,7 @@ import {
 import Loader from '../components/Loader'
 import Rating from '../components/Rating'
 import Message from '../components/Message'
+import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
 
 const ProductScreen = ({ history, match }) => {
   const [quantity, setQuantity] = useState(1)
@@ -33,11 +34,15 @@ const ProductScreen = ({ history, match }) => {
   const { userInfo } = userLogin
 
   useEffect(() => {
+    if (successProductReview) {
+      setRating(0)
+      setComment('')
+      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
+    }
     dispatch(listProductsDetails(match.params.id))
-  }, [dispatch, successProductReview])
+  }, [dispatch, match, successProductReview])
 
   const addToCart = () => {
-    setQuantity(1)
     history.push(`/cart/${match.params.id}?qty=${quantity}`)
   }
   const submitHandler = e => {
@@ -69,7 +74,7 @@ const ProductScreen = ({ history, match }) => {
                 <ListGroup.Item>
                   <h2>{product.name}</h2>
                 </ListGroup.Item>
-                ;
+
                 <ListGroup.Item>
                   <h2>rating</h2>
 

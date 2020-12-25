@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Table, Button } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-import { listUsers } from '../actions/userActions'
+import { listUsers, deleteUser } from '../actions/userActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 
@@ -15,15 +15,20 @@ const UserListScreen = ({ history }) => {
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
 
+  const userDelete = useSelector(state => state.userDelete)
+  const { success: successDelete } = userDelete
+
   useEffect(() => {
     if (userInfo && userInfo.role > 0) {
       dispatch(listUsers())
     } else {
       history.pushState('/login')
     }
-  }, [dispatch, history, userInfo])
+  }, [dispatch, history, successDelete, userInfo])
 
-  const deleteHandler = id => {}
+  const deleteHandler = id => {
+    dispatch(deleteUser(id))
+  }
 
   return (
     <>

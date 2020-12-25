@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { FaOpencart } from 'react-icons/fa'
-import { AiFillLock } from 'react-icons/ai'
+import { AiFillLock, AiOutlineShoppingCart } from 'react-icons/ai'
+import { HiShoppingCart } from 'react-icons/hi'
 import { logout } from '../actions/userActions'
 
 const Header = () => {
@@ -26,7 +27,7 @@ const Header = () => {
           <Nav className='ml-auto'>
             <LinkContainer to='/cart'>
               <Nav.Link>
-                <FaOpencart size={30} /> cart
+                <HiShoppingCart size={30} />
               </Nav.Link>
             </LinkContainer>
             {userInfo ? (
@@ -46,7 +47,7 @@ const Header = () => {
               </LinkContainer>
             )}
 
-            {userInfo && userInfo.role === 1 && (
+            {userInfo && !(userInfo.role === 0) && (
               <NavDropdown title='Admin' id='adminmenu'>
                 <LinkContainer to='/admin/userlist'>
                   <NavDropdown.Item>Users</NavDropdown.Item>

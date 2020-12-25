@@ -76,11 +76,11 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-const product = mongoose.model('Product', productSchema)
+const Product = mongoose.model('Product', productSchema)
 
 exports.createDocument = async id => {
   try {
-    const newProduct = await product.create({
+    const newProduct = await Product.create({
       name: 'Sample Product',
       price: 0,
       user: id,
@@ -113,7 +113,7 @@ exports.createDocument = async id => {
 
 exports.getAllDocuments = async _ => {
   try {
-    return await product.find()
+    return await Product.find()
   } catch (err) {
     return {
       error: 'No products found in the database',
@@ -124,7 +124,7 @@ exports.getAllDocuments = async _ => {
 
 exports.getDocumentById = async id => {
   try {
-    return await product.findById(id)
+    return await Product.findById(id)
   } catch (err) {
     return {
       error: 'error getting the product by id',
@@ -135,7 +135,7 @@ exports.getDocumentById = async id => {
 
 exports.getDocumentByName = async name => {
   try {
-    return await product.find({ name })
+    return await Product.find({ name })
   } catch (err) {
     return {
       error: 'error getting the product by name',
@@ -152,18 +152,18 @@ exports.updateDocument = async productData => {
     //   productDb[key] = value
     // }
 
-    const productDB = await product.findById(productId)
+    const productDB = await Product.findById(productId)
     if (productDB) {
-      productDB.name = newProductDetails.name || product.name
+      productDB.name = newProductDetails.name || Product.name
       productDB.description =
-        newProductDetails.description || product.description
-      productDB.price = newProductDetails.price || product.price
-      productDB.category = newProductDetails.category || product.category
-      productDB.brand = newProductDetails.brand || product.brand
+        newProductDetails.description || Product.description
+      productDB.price = newProductDetails.price || Product.price
+      productDB.category = newProductDetails.category || Product.category
+      productDB.brand = newProductDetails.brand || Product.brand
       productDB.countInStock =
-        newProductDetails.countInStock || product.countInStock
-      productDB.sold = newProductDetails.sold || product.sold
-      productDB.image = newProductDetails.image || product.image
+        newProductDetails.countInStock || Product.countInStock
+      productDB.sold = newProductDetails.sold || Product.sold
+      productDB.image = newProductDetails.image || Product.image
 
       const updatedproduct = await productDB.save()
       return updatedproduct
@@ -182,7 +182,7 @@ exports.updateDocument = async productData => {
 
 exports.deleteDocument = async id => {
   try {
-    return await product.deleteOne({ _id: id })
+    return await Product.deleteOne({ _id: id })
   } catch (err) {
     return {
       error: 'error deleting the product from the database',
@@ -232,8 +232,7 @@ exports.addReviewDocument = async req => {
   }
 }
 exports.getTopDocuments = async _ => {
-  const topProducts = await product
-    .find()
+  const topProducts = await Product.find()
     .sort({ rating: -1 })
     .limit(3)
   return topProducts

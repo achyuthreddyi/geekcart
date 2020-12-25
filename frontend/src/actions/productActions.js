@@ -27,6 +27,7 @@ export const listProducts = () => async disapatch => {
   try {
     disapatch({ type: PRODUCT_LIST_REQUEST })
     const { data } = await axios.get('http://localhost:5000/api/product/')
+    console.log(await axios.get('http://localhost:5000/api/product/'))
     disapatch({
       type: PRODUCT_LIST_SUCCESS,
       payload: data
@@ -55,7 +56,7 @@ export const listProductsDetails = id => async dispatch => {
       payload:
         error.response && error.response.data.error
           ? error.response.data.error.data.error
-          : error.message
+          : error.error
     })
   }
 }
@@ -82,9 +83,9 @@ export const deleteProduct = id => async (dispatch, getState) => {
     dispatch({
       type: PRODUCT_DELETE_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
+        error.response && error.response.data.error
+          ? error.response.data.error
+          : error.error
     })
   }
 }
@@ -116,9 +117,9 @@ export const createProduct = () => async (dispatch, getState) => {
     dispatch({
       type: PRODUCT_CREATE_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
+        error.response && error.response.data.error
+          ? error.response.data.error
+          : error.error
     })
   }
 }
@@ -151,9 +152,9 @@ export const updateProduct = product => async (dispatch, getState) => {
     dispatch({
       type: PRODUCT_UPDATE_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
+        error.response && error.response.data.error
+          ? error.response.data.error
+          : error.error
     })
   }
 }
@@ -196,9 +197,9 @@ export const createProductReview = (productId, review) => async (
     dispatch({
       type: PRODUCT_CREATE_REVIEW_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
+        error.response && error.response.data.error
+          ? error.response.data.error
+          : error.error
     })
   }
 }
@@ -215,9 +216,9 @@ export const listTopProducts = () => async dispatch => {
     dispatch({
       type: PRODUCT_TOP_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
+        error.response && error.response.data.error
+          ? error.response.data.error
+          : error.error
     })
   }
 }

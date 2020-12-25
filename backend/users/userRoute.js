@@ -9,7 +9,8 @@ const {
   updateUser,
   deleteUser,
   getAllUsers,
-  updateUserProfile
+  updateUserProfile,
+  getUserProfile
 } = require('./userController')
 
 const router = express.Router()
@@ -47,7 +48,7 @@ router.post(
 router.get('/signout', signOut)
 router
   .route('/profile')
-  .get(isSignedIn, getUser)
+  .get(isSignedIn, getUserProfile)
   .put(isSignedIn, updateUserProfile)
 
 router

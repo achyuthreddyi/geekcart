@@ -114,19 +114,26 @@ exports.updateUserProfile = async (req, res) => {
 // @route   GET /api/users/:id
 // @access  Private
 exports.getUser = async (req, res) => {
-  res.status(200).json(req.user)
+  const id = req.params.userId
+  const userDB = await getUserById(id)
+  if (!userDB.error) {
+    return res.status(200).json(userDB)
+  } else {
+    return res.status(400).json(userDB)
+  }
 }
 
 // @desc    delete a user
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
 exports.deleteUser = async (req, res) => {
-  const { email } = req.body
-  const userExists = await getUserByEmail(email)
+  const id = req.params.userId
+  console.log('user id in the delete method', id)
+  const userExists = await getUserById(id)
+  console.log('user exists in the delete user', userExists)
 
   if (userExists) {
-    console.log('user exists ', userExists)
-    const deletedUser = await removeUser(email)
+    const deletedUser = await removeUser(userExists.email)
     if (!deletedUser.error) {
       res.status(200).json(deletedUser)
     } else {
@@ -150,6 +157,10 @@ exports.getAllUsers = async (req, res) => {
   } else {
     res.status(400).json(userList)
   }
+}
+
+exports.getUserProfile = async (req, res) => {
+  res.status(200).json(req.user)
 }
 
 // exports.getUserParam = async (req, res, next, id) => {
