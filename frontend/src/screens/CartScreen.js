@@ -6,6 +6,7 @@ import Message from '../components/Message.js'
 import { AiOutlineArrowLeft, AiOutlineDelete } from 'react-icons/ai'
 
 import { addToCart, removeCart } from '../actions/cartActions'
+import TitleHelmet from '../components/TitleHelmet.js'
 
 const CartScreen = ({ match, location, history }) => {
   const productId = match.params.id
@@ -33,6 +34,8 @@ const CartScreen = ({ match, location, history }) => {
 
   return (
     <Row>
+      <TitleHelmet title='Your cart ' />
+
       <Col md={8}>
         <h1>Shopping Cart</h1>
         {cartItems.length === 0 ? (

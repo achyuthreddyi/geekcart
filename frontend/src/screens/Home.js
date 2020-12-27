@@ -9,6 +9,7 @@ import ProductCarousel from '../components/ProductCarousel'
 import { Link } from 'react-router-dom'
 
 import { AiOutlineArrowLeft } from 'react-icons/ai'
+import TitleHelmet from '../components/TitleHelmet'
 
 const Home = ({ match }) => {
   const keyword = match.params.keyword
@@ -24,6 +25,7 @@ const Home = ({ match }) => {
   console.log(productList)
   return (
     <div>
+      <TitleHelmet />
       {!keyword ? (
         <ProductCarousel />
       ) : (

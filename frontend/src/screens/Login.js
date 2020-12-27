@@ -6,6 +6,7 @@ import { login } from '../actions/userActions'
 import FormContainer from '../components/FormContainer'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import TitleHelmet from '../components/TitleHelmet'
 
 const Login = ({ location, history }) => {
   const [email, setEmail] = useState('')
@@ -33,6 +34,8 @@ const Login = ({ location, history }) => {
 
   return (
     <FormContainer>
+      {!loading && !error && <TitleHelmet title={'Login'} />}
+
       <h1>Sign In</h1>
       {loading && <Loader />}
       {error && <Message variant='danger' error={error} />}
